@@ -376,7 +376,7 @@ namespace Sieve.Services
         {
             var bindingFlags = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance;
 
-            if (_options.Value.CaseSensitive)
+            if (!_options.Value.CaseSensitive)
                 bindingFlags = bindingFlags | BindingFlags.IgnoreCase;
 
             PropertyInfo prop = null;
