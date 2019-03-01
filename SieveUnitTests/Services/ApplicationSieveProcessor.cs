@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Reflection;
+using Microsoft.Extensions.Options;
 using Sieve.Models;
 using Sieve.Services;
 using SieveUnitTests.Entities;
@@ -7,12 +11,15 @@ namespace SieveUnitTests.Services
 {
 	public class ApplicationSieveProcessor : SieveProcessor
     {
+        private readonly IOptions<SieveOptions> _options;
+
         public ApplicationSieveProcessor(
             IOptions<SieveOptions> options,
             ISieveCustomSortMethods customSortMethods,
             ISieveCustomFilterMethods customFilterMethods)
             : base(options, customSortMethods, customFilterMethods)
         {
+            _options = options;
         }
 
         protected override SievePropertyMapper MapProperties(SievePropertyMapper mapper)
@@ -33,5 +40,7 @@ namespace SieveUnitTests.Services
 
             return mapper;
         }
+
+        
     }
 }

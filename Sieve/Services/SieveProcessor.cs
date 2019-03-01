@@ -355,7 +355,14 @@ namespace Sieve.Services
             bool canFilterRequired,
             string name)
         {
-            var property = mapper.FindProperty<TEntity>(canSortRequired, canFilterRequired, name, _options.Value.CaseSensitive);
+            
+
+            (string, PropertyInfo) property = (null,null);
+            if (_options.Value.MapAllProperties)
+                property = GetSievePropertyUsingReflection<TEntity>(name);
+            else
+                property = mapper.FindProperty<TEntity>(canSortRequired, canFilterRequired, name, _options.Value.CaseSensitive);
+
             if(property.Item1 == null)
             {
                 var prop = FindPropertyBySieveAttribute<TEntity>(canSortRequired, canFilterRequired, name, _options.Value.CaseSensitive);
@@ -363,6 +370,31 @@ namespace Sieve.Services
             }
             return property;
                 
+        }
+
+        private (string, PropertyInfo) GetSievePropertyUsingReflection<TEntity>(string name)
+        {
+            var bindingFlags = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance;
+
+            if (_options.Value.CaseSensitive)
+                bindingFlags = bindingFlags | BindingFlags.IgnoreCase;
+
+            PropertyInfo prop = null;
+            var type = typeof(TEntity);
+            foreach (var part in name.Split('.'))
+            {
+                prop = type.GetProperty(part, bindingFlags);
+                if (prop == null)
+                    break;
+                type = prop.PropertyType;
+            }
+
+            if (prop != null)
+            {
+                return (name, prop);
+            }
+
+            return (null, null);
         }
 
         private PropertyInfo FindPropertyBySieveAttribute<TEntity>(

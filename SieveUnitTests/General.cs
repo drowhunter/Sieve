@@ -22,7 +22,7 @@ namespace SieveUnitTests
             _processor = new ApplicationSieveProcessor(new SieveOptionsAccessor(),
                 new SieveCustomSortMethods(),
                 new SieveCustomFilterMethods());
-
+            
             _posts = new List<Post>
             {
                 new Post() {

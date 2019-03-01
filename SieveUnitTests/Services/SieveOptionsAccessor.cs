@@ -11,7 +11,8 @@ namespace SieveUnitTests
         {
             Value = new SieveOptions()
             {
-                ThrowExceptions = true
+                ThrowExceptions = true,
+                MapAllProperties = true
             };
         }
     }
